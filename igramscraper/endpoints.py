@@ -32,6 +32,7 @@ LIKE_URL = 'https://www.instagram.com/web/likes/%s/like/'
 UNLIKE_URL = 'https://www.instagram.com/web/likes/%s/unlike/'
 ADD_COMMENT_URL = 'https://www.instagram.com/web/comments/%s/add/'
 DELETE_COMMENT_URL = 'https://www.instagram.com/web/comments/%s/delete/%s/'
+SIMILAR_ACCOUNTS = "https://www.instagram.com/graphql/query/?query_hash=d4d88dc1500312af6f937f7b804c68c3&variables=%s"
 
 ACCOUNT_MEDIAS2 = 'https://www.instagram.com/graphql/query/?query_id=17880160963012870&id={{accountId}}&first=10&after='
 
@@ -148,6 +149,8 @@ def get_graph_ql_url(query_id, parameters):
 
     return url
 
+def get_similar_accounts(variables):
+    return SIMILAR_ACCOUNTS % urllib.parse.quote_plus(json.dumps(variables, separators=(',', ':')))
 
 def get_stories_link(variables):
     return get_graph_ql_url(STORIES, {'variables': json.dumps(variables, separators=(',', ':'))})

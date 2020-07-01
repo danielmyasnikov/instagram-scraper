@@ -1131,6 +1131,32 @@ class Instagram:
         return Account(
             user_array['entry_data']['ProfilePage'][0]['graphql']['user'])
 
+    def get_similar_by_user_id(self, user_id):
+        """
+        :param user_id: uid
+        :return: Account list
+        """
+        variables = { 'user_id': user_id, "include_chaining" : True, "include_reel" : True, "include_suggested_users": True, "include_highlight_reels": True, "include_live_status": True }
+
+        time.sleep(self.sleep_between_requests)
+        response = self.__req.get(endpoints.get_similar_accounts(variables), headers=self.generate_headers(self.user_session))
+
+        if Instagram.HTTP_NOT_FOUND == response.status_code:
+            raise InstagramNotFoundException(
+                'Account with given username does not exist.')
+
+        if Instagram.HTTP_OK != response.status_code:
+            raise InstagramException.default(response.text,
+                                             response.status_code)
+
+        parsed_response = json.loads(response.text)
+        user_array = []
+
+        for account in parsed_response['data']['user']['edge_chaining']['edges']:
+            user_array.append(Account(account['node']))
+
+        return user_array
+
     def get_stories(self, reel_ids=None):
         """
         :param reel_ids: reel ids
