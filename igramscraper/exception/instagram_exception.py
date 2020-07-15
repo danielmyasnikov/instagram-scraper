@@ -1,7 +1,9 @@
 class InstagramException(Exception):
     def __init__(self, message="", code=500):
+        self.message = message
+        self.code = code
         super().__init__(f'{message}, Code:{code}')
-    
+
     @staticmethod
     def default(response_text, status_code):
         return InstagramException(
